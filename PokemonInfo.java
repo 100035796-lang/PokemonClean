@@ -33,4 +33,31 @@ public class PokemonInfo {
                     + " (" + a.getType() + ")");
         }
     }
+
+	public double getNameHP(String defendername) {
+		switch (defendername) {
+		case "Rayquaza":
+			return 414;
+		case "Venusaur":
+			return 364;
+		case "Wailord":
+			return 544;
+		case "Zekrom":
+			return 404;
+		case "Blastoise":
+			return 362;
+		case "Charizard":
+			return 360;
+		case "Cofagrigus":
+			return 320;
+		case "Groudon":
+			return 404;
+		case "Machamp":
+			return 384;
+		case "Metagross":
+			return 364;	
+			default:
+				return 0;
+		}
+	}
 }

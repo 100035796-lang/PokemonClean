@@ -78,6 +78,7 @@ public class PokemonGame {
 
         System.out.println("\nThe battle will now begin!");
         battleLoop(player1Team, player2Team, scanner);
+        
     }
 
 
@@ -111,8 +112,12 @@ public class PokemonGame {
             playerAttack("Player 2", p2, p1, scanner);
 
             if (p1.getHp() <= 0) {
-                System.out.println(p1.getName() + " has fainted!");
-
+            	if (!p2.getName().equals("Wailord")) {
+            		 System.out.println(p1.getName() + " has fainted!");
+            	} else {
+            		System.out.println(p1.getName() + " has been squashed to death. The pokeball has broken and " + p1.getName() + " has literally died.");
+            	}
+               
                 p1Index++;
                 if (p1Index >= p1Team.size()) {
                     System.out.println("Player 1 has no Pokémon left!");
@@ -128,7 +133,10 @@ public class PokemonGame {
     }
 
     public static void playerAttack(String player, PokemonInfo attacker, PokemonInfo defender, Scanner scanner) {
-        System.out.println("\n" + player + " — Choose an attack for " + attacker.getName() + ":");
+        
+    	
+    	
+    	System.out.println("\n" + player + " — Choose an attack for " + attacker.getName() + ":");
 
         List<Attack> moves = attacker.getAttacks();
         for (int i = 0; i < moves.size(); i++) {
@@ -136,7 +144,25 @@ public class PokemonGame {
             System.out.println((i + 1) + ". " + a.getName() + " (" + a.getType() + ")");
         }
 
-        int choice = scanner.nextInt();
+        int choice = -1;
+        while (true) {
+            System.out.print("Enter a number between 1 and " + moves.size() + ": ");
+
+            if (!scanner.hasNextInt()) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.next();
+                continue;
+            }
+
+            choice = scanner.nextInt();
+
+            if (choice >= 1 && choice <= moves.size()) {
+                break;
+            }
+
+            System.out.println("Choice out of range. Try again.");
+        }
+        
         Attack chosen = moves.get(choice - 1);
 
         System.out.println(attacker.getName() + " used " + chosen.getName() + "!");
@@ -158,8 +184,18 @@ public class PokemonGame {
         System.out.println(attacker.getName() + " used " + chosen.getName() + "!");
         System.out.println("It dealt " + finalDamage + " damage! (x" + multiplier + ")");
         System.out.println(defender.getName() + " HP: " + defender.getHp());
+        String defendername = defender.getName();
+        double originalHP = (defender.getNameHP(defendername));
+        int healthy = (int) ((defender.getHp()/originalHP)*20);
+        int unhealthy = 20 - healthy;
+        for (int i = 0; i < healthy; i++) {
+        	System.out.print("█");
+        }
+        for (int i = 0; i < unhealthy; i++) {
+        	System.out.print("░");
+        }
+        System.out.print("\n");        
 
     }
-    
     
 }
