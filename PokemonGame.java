@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class PokemonGame {
-
+	static String[] names = new String[2];
     public static PokemonInfo getPokemonObject(String name) {
         return switch (name) {
             case "Blastoise (Water)" -> new Blastoise();
@@ -37,11 +37,16 @@ public class PokemonGame {
 
         List<PokemonInfo> player1Team = new ArrayList<>();
         List<PokemonInfo> player2Team = new ArrayList<>();
+        System.out.println("Player 1, what is your name?");
+        String p1name = scanner.nextLine();
+        System.out.println("Player 2, what is your name?");
+        String p2name = scanner.nextLine();
+        names[0] = p1name.toUpperCase();
+        names[1] = p2name.toUpperCase();
+        
+        for (int p = 0; p <= 1; p++) {
 
-
-        for (int p = 1; p <= 2; p++) {
-
-            System.out.println("\n===== PLAYER " + p + " CHOOSE YOUR TEAM =====");
+            System.out.println("\n===== " + names[p] + ", PLEASE CHOOSE YOUR TEAM =====");
 
             List<String> available = new ArrayList<>(originalPokemon);
             List<PokemonInfo> currentTeam = (p == 1 ? player1Team : player2Team);
@@ -68,11 +73,11 @@ public class PokemonGame {
             }
         }
 
-        System.out.println("\n===== PLAYER 1 FIRST POKEMON STATS =====");
+        System.out.println("\n===== " + names[0] + " FIRST POKEMON STATS =====");
         PokemonInfo p1Current = player1Team.get(0);
         p1Current.printInfo();
 
-        System.out.println("\n===== PLAYER 2 FIRST POKEMON STATS =====");
+        System.out.println("\n===== " + names[1] + " FIRST POKEMON STATS =====");
         PokemonInfo p2Current = player2Team.get(0);
         p2Current.printInfo();
 
@@ -92,24 +97,24 @@ public class PokemonGame {
 
         while (true) {
 
-            playerAttack("Player 1", p1, p2, scanner);
+            playerAttack(names[0], p1, p2, scanner);
 
             if (p2.getHp() <= 0) {
                 System.out.println(p2.getName() + " has fainted!");
 
                 p2Index++;
                 if (p2Index >= p2Team.size()) {
-                    System.out.println("Player 2 has no Pokémon left!");
-                    System.out.println("PLAYER 1 WINS!");
+                    System.out.println(names[1] + " has no Pokémon left!");
+                    System.out.println(names[0] + " WINS!");
                     return;
                 }
 
                 p2 = p2Team.get(p2Index);
-                System.out.println("Player 2 sends out: " + p2.getName());
+                System.out.println(names[1] + " sends out: " + p2.getName());
                 p2.printInfo();
             }
 
-            playerAttack("Player 2", p2, p1, scanner);
+            playerAttack(names[1], p2, p1, scanner);
 
             if (p1.getHp() <= 0) {
             	if (!p2.getName().equals("Wailord")) {
@@ -120,13 +125,13 @@ public class PokemonGame {
                
                 p1Index++;
                 if (p1Index >= p1Team.size()) {
-                    System.out.println("Player 1 has no Pokémon left!");
-                    System.out.println("PLAYER 2 WINS!");
+                    System.out.println(names[0] + " has no Pokémon left!");
+                    System.out.println(names[1] + " WINS!");
                     return;
                 }
 
                 p1 = p1Team.get(p1Index);
-                System.out.println("Player 1 sends out: " + p1.getName());
+                System.out.println(names[0] + " sends out: " + p1.getName());
                 p1.printInfo();
             }
         }
@@ -134,9 +139,7 @@ public class PokemonGame {
 
     public static void playerAttack(String player, PokemonInfo attacker, PokemonInfo defender, Scanner scanner) {
         
-    	
-    	
-    	System.out.println("\n" + player + " — Choose an attack for " + attacker.getName() + ":");
+    	System.out.println("\n" + player + " — Choose an attack for your " + attacker.getName() + ":");
 
         List<Attack> moves = attacker.getAttacks();
         for (int i = 0; i < moves.size(); i++) {
@@ -165,7 +168,6 @@ public class PokemonGame {
         
         Attack chosen = moves.get(choice - 1);
 
-        System.out.println(attacker.getName() + " used " + chosen.getName() + "!");
 
         String defenderType1 = defender.getType();
         String defenderType2 = null; 
