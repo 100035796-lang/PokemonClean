@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class PokemonGame {
+public class PokemonGameWithPictures {
 
     static String[] names = new String[2];
 
@@ -48,7 +48,7 @@ public class PokemonGame {
 
         for (int p = 0; p < 2; p++) {
 
-            System.out.println("\n===== " + names[p] + ", PLEASE CHOOSE YOUR TEAM =====");
+            System.out.println("\n===== " + names[p] + ", CHOOSE YOUR TEAM =====");
 
             List<String> available = new ArrayList<>(originalPokemon);
             List<PokemonInfo> currentTeam = (p == 0 ? player1Team : player2Team);
@@ -85,15 +85,15 @@ public class PokemonGame {
             }
         }
 
-        System.out.println("\n===== " + names[0] + " FIRST POKEMON STATS =====");
-        PokemonInfo p1Current = player1Team.get(0);
-        p1Current.printInfo();
+        System.out.println("\n===== " + names[0] + " FIRST POKEMON =====");
+        player1Team.get(0).printInfo();
 
-        System.out.println("\n===== " + names[1] + " FIRST POKEMON STATS =====");
-        PokemonInfo p2Current = player2Team.get(0);
-        p2Current.printInfo();
+        System.out.println("\n===== " + names[1] + " FIRST POKEMON =====");
+        player2Team.get(0).printInfo();
 
-        System.out.println("\nThe battle will now begin!");
+        System.out.println("\nBattle Beginning!");
+
+        BattleImageDisplay.initializeWindow();
         battleLoop(player1Team, player2Team, scanner);
     }
 
@@ -110,16 +110,14 @@ public class PokemonGame {
             playerAttack(names[0], p1, p2, scanner);
 
             if (p2.getHp() <= 0) {
-
                 if (!p1.getName().equals("Wailord"))
                     System.out.println(p2.getName() + " has fainted!");
                 else
-                    System.out.println(p2.getName() + " has been squashed to death. The pokeball has been broken and " + p2.getName() + " has literally died.");
+                    System.out.println(p2.getName() + " has been squashed to death.");
 
                 p2Index++;
-
                 if (p2Index >= p2Team.size()) {
-                    System.out.println(names[1] + " has no more Pokémon left!");
+                    System.out.println(names[1] + " has no more Pokémon!");
                     System.out.println(names[0] + " WINS!");
                     DisplayWinningPokemon.Display(p1.getName());
                     return;
@@ -133,16 +131,14 @@ public class PokemonGame {
             playerAttack(names[1], p2, p1, scanner);
 
             if (p1.getHp() <= 0) {
-
                 if (!p2.getName().equals("Wailord"))
                     System.out.println(p1.getName() + " has fainted!");
                 else
-                    System.out.println(p1.getName() + " has been squashed to death. The pokeball has been broken and " + p1.getName() + " has literally died.");
+                    System.out.println(p1.getName() + " has been squashed to death.");
 
                 p1Index++;
-
                 if (p1Index >= p1Team.size()) {
-                    System.out.println(names[0] + " has no more Pokémon left!");
+                    System.out.println(names[0] + " has no more Pokémon!");
                     System.out.println(names[1] + " WINS!");
                     DisplayWinningPokemon.Display(p2.getName());
                     return;
@@ -157,7 +153,9 @@ public class PokemonGame {
 
     public static void playerAttack(String player, PokemonInfo attacker, PokemonInfo defender, Scanner scanner) {
 
-        System.out.println("\n" + player + " — Choose an attack for your " + attacker.getName() + ":");
+        BattleImageDisplay.updateImages(attacker.getName(), defender.getName());
+
+        System.out.println("\n" + player + " — Choose an attack for " + attacker.getName() + ":");
 
         List<Attack> moves = attacker.getAttacks();
         for (int i = 0; i < moves.size(); i++) {
@@ -166,33 +164,33 @@ public class PokemonGame {
         }
 
         int choice = -1;
-
         while (true) {
             System.out.print("Enter a number between 1 and " + moves.size() + ": ");
 
-            while (!scanner.hasNextInt()) {
+            if (!scanner.hasNextInt()) {
+                System.out.println("Invalid input. Please enter a number.");
                 scanner.next();
-                System.out.print("Enter a number between 1 and " + moves.size() + ": ");
+                continue;
             }
 
             choice = scanner.nextInt();
-            scanner.nextLine();
 
-            if (choice >= 1 && choice <= moves.size()) break;
+            if (choice >= 1 && choice <= moves.size()) {
+                break;
+            }
+
+            System.out.println("Choice out of range. Try again.");
         }
 
         Attack chosen = moves.get(choice - 1);
 
-        String typeData = defender.getType();
-        String defenderType1;
+        String defenderType1 = defender.getType();
         String defenderType2 = null;
 
-        if (typeData.contains(",")) {
-            String[] split = typeData.split(", ");
-            defenderType1 = split[0];
-            defenderType2 = split[1];
-        } else {
-            defenderType1 = typeData;
+        if (defender.getType().contains(",")) {
+            String[] types = defender.getType().split(", ");
+            defenderType1 = types[0];
+            defenderType2 = types[1];
         }
 
         double multiplier = TypeDamageChecker.getMultiplier(chosen.getType(), defenderType1, defenderType2);
@@ -200,21 +198,21 @@ public class PokemonGame {
         int finalDamage = (int) (chosen.getDamage() * multiplier);
         defender.takeDamage(finalDamage);
 
-        System.out.printf("%s used %s!\n", attacker.getName(), chosen.getName());
-        System.out.printf("It dealt %d damage! (x%.2f)\n", finalDamage, multiplier);
+        System.out.println(attacker.getName() + " used " + chosen.getName() + "!");
+        System.out.println("It dealt " + finalDamage + " damage! (x" + multiplier + ")");
         System.out.println(defender.getName() + " HP: " + defender.getHp());
 
-        double fraction = defender.getHp() / defender.getMaxHP(defender.getName());
-        if (fraction < 0) fraction = 0;
-        int filled = (int) (fraction * 20);
-        int empty = 20 - filled;
-
-        for (int i = 0; i < filled; i++) {
-        	System.out.print("█");
+        String defenderName = defender.getName();
+        double originalHP = defender.getMaxHP(defenderName);
+        int healthy = (int) ((defender.getHp() / originalHP) * 20);
+        int unhealthy = 20 - healthy;
+        for (int i = 0; i < healthy; i++) {
+            System.out.print("█");
         }
-        	
-        for (int i = 0; i < empty; i++) 
-        	System.out.print("░");
+        for (int i = 0; i < unhealthy; i++) {
+            System.out.print("░");
+        }
         System.out.print("\n");
     }
+
 }

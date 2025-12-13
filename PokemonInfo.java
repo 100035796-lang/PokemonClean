@@ -34,7 +34,7 @@ public class PokemonInfo {
         }
     }
 
-	public double getNameHP(String defendername) {
+	public double getMaxHP(String defendername) {
 		switch (defendername) {
 		case "Rayquaza":
 			return 414;
