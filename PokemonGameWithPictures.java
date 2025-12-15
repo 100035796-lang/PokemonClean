@@ -21,6 +21,8 @@ public class PokemonGameWithPictures {
     }
 
     public static void startGame() {
+    	
+    	DisplayInstructions();
 
         List<String> originalPokemon = List.of(
             "Blastoise (Water)",
@@ -119,7 +121,6 @@ public class PokemonGameWithPictures {
                 if (p2Index >= p2Team.size()) {
                     System.out.println(names[1] + " has no more Pokémon!");
                     System.out.println(names[0] + " WINS!");
-                    DisplayWinningPokemon.Display(p1.getName());
                     return;
                 }
 
@@ -140,7 +141,6 @@ public class PokemonGameWithPictures {
                 if (p1Index >= p1Team.size()) {
                     System.out.println(names[0] + " has no more Pokémon!");
                     System.out.println(names[1] + " WINS!");
-                    DisplayWinningPokemon.Display(p2.getName());
                     return;
                 }
 
@@ -214,5 +214,35 @@ public class PokemonGameWithPictures {
         }
         System.out.print("\n");
     }
-
+    
+    public static void DisplayInstructions() {
+		String nothing = null;
+		Scanner Scannerdi = new Scanner(System.in);
+		System.out.println("Welcome to my Pokemon Game.");
+		System.out.println("Press any key to continue.");
+		nothing = Scannerdi.nextLine();
+		System.out.println("This is a two player game, so you can play with a friend or against yourself.");
+		System.out.println("Press any key to continue.");
+		nothing = Scannerdi.nextLine();
+		System.out.println("Here are the rules of the game.");
+		System.out.println("Press any key to continue.");
+		nothing = Scannerdi.nextLine();
+		System.out.println("Player one will create a team out of the 10 available Pokemon.");
+		System.out.println("Player two will then pick a team out of the 10 available Pokemon");
+		System.out.println("It is possible for the two players to have the same Pokemon");
+		System.out.println("However, you can not have a team with more than two of one Pokemon");
+		System.out.println("Press any key to continue.");
+		nothing = Scannerdi.nextLine();
+		System.out.println("As a general rule of thumb, here are the type weaknesses:");
+		System.out.println("Fire does more against grass, water does more against fire, and so on");
+		System.out.println("Press any key to continue.");
+		nothing = Scannerdi.nextLine();
+		System.out.println("I'm sure you can figure out the rest :)");
+		System.out.println("Press any key to continue.");
+		nothing = Scannerdi.nextLine();
+		System.out.println("By the way. I'm a huge fan of Wailord!");
+		System.out.println("Press any key to continue.");
+		nothing = Scannerdi.nextLine();
+		
+	}
 }

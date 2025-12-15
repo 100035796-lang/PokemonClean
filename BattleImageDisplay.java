@@ -11,10 +11,11 @@ public class BattleImageDisplay {
         frame = new JFrame("Pokémon Battle Display");
         frame.setSize(500, 400);
         frame.setResizable(false);
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLayout(null);
 
         defenderLabel = new JLabel();
+        attackerLabel = new JLabel();
 
         attackerLabel.setBounds(280, 20, 200, 150);
         attackerLabel.setHorizontalAlignment(JLabel.CENTER);
